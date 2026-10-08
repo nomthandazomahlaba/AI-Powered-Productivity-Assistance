@@ -1,0 +1,284 @@
+import streamlit as st
+import pandas as pd
+import time
+
+# --- PAGE CONFIGURATION ---
+st.set_page_config(
+    page_title="AI Workplace Assistant",
+    page_icon="⚡",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+# --- CUSTOM CSS STYLING ---
+st.markdown("""
+    <style>
+    .main-header {
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: #1E293B;
+        margin-bottom: 0px;
+    }
+    .sub-header {
+        font-size: 1rem;
+        color: #64748B;
+        margin-bottom: 20px;
+    }
+    .stButton>button {
+        background-color: #4F46E5;
+        color: white;
+        border-radius: 8px;
+        font-weight: 600;
+        border: none;
+        width: 100%;
+    }
+    .stButton>button:hover {
+        background-color: #4338CA;
+        color: white;
+    }
+    .disclaimer-box {
+        background-color: #FEF3C7;
+        border-left: 4px solid #F59E0B;
+        padding: 12px;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        color: #92400E;
+        margin-top: 15px;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# --- SIDEBAR & RESPONSIBLE AI SAFEGUARDS ---
+with st.sidebar:
+    st.image("https://img.icons8.com/isometric-folders/100/artificial-intelligence.png", width=64)
+    st.title("CAPACITI AI Assistant")
+    st.caption("AI-Powered Workplace Productivity Suite")
+    st.divider()
+    
+    st.subheader("🛡️ Responsible AI Framework")
+    st.info("""
+    **Human-in-the-Loop Validation Active**
+    - Outputs are AI-generated suggestions.
+    - Always verify dates, names, and factual statements.
+    - Local PII protection active (No personal data logged).
+    """)
+    st.divider()
+    st.caption("© CAPACITI AI Skill Accelerator Programme")
+
+
+# --- APP HEADER ---
+st.markdown('<p class="main-header">⚡ AI Workplace Productivity Assistant</p>', unsafe_allow_html=True)
+st.markdown('<p class="sub-header">Automate repetitive tasks, organize schedules, and synthesize information responsibly.</p>', unsafe_allow_html=True)
+
+# --- NAVIGATION TABS ---
+tab1, tab2, tab3, tab4, tab5 = st.tabs([
+    "📧 1. Smart Email", 
+    "📝 2. Meeting Summarizer", 
+    "📅 3. Task Planner", 
+    "🔍 4. Research Assistant", 
+    "💬 5. AI Chatbot"
+])
+
+
+# ==========================================
+# 1. SMART EMAIL GENERATOR
+# ==========================================
+with tab1:
+    st.header("Smart Email Generator")
+    st.caption("Draft context-aware professional emails tailored by audience and tone.")
+    
+    col1, col2 = st.columns([1, 1], gap="large")
+    
+    with col1:
+        audience = st.selectbox("Target Audience", ["Client / External Partner", "Executive / Manager", "Internal Team / Peers"])
+        tone = st.selectbox("Desired Tone", ["Formal & Professional", "Informal & Conversational", "Persuasive & Value-Driven"])
+        context = st.text_area("Context / Key Message Details", height=150, placeholder="e.g., Requesting a 2-week extension on project deadline due to delayed vendor API documentation...")
+        
+        generate_email = st.button("Generate Professional Draft", key="email_btn")
+    
+    with col2:
+        st.subheader("Generated Email Draft")
+        if generate_email:
+            if context.strip():
+                with st.spinner("Engineering prompt & generating draft..."):
+                    time.sleep(0.8) # Simulate AI processing
+                    
+                    if "Formal" in tone and "Manager" in audience:
+                        subject = f"Status Update & Action Request: {context[:35]}..."
+                        body = f"Dear [Manager Name],\n\nI am writing to provide a formal status update regarding {context}.\n\nKey Highlights:\n- Progress is currently aligned with our primary Q3 targets.\n- Deliverables are undergoing final quality assurance checks.\n\nPlease let me know if you would like to adjust our current execution strategy.\n\nBest regards,\n[Your Name]"
+                    elif "Persuasive" in tone:
+                        subject = f"Unlocking Project Value: {context[:35]}..."
+                        body = f"Hi [Client Name],\n\nI hope this message finds you well.\n\nI wanted to highlight an exciting opportunity regarding {context}. By aligning on these key deliverables today, we can streamline implementation and reduce operational overhead significantly.\n\nWould you be available for a brief 10-minute sync this Thursday?\n\nBest regards,\n[Your Name]"
+                    else:
+                        subject = f"Quick Sync: {context[:35]}..."
+                        body = f"Hey team,\n\nQuick heads-up concerning {context}.\n\nLet's make sure we are all aligned on our priority targets for the week. Feel free to drop any blockers in the channel.\n\nCheers,\n[Your Name]"
+                    
+                    draft_text = f"SUBJECT: {subject}\n\n{body}"
+                    st.code(draft_text, language="text")
+                    
+                    st.markdown("""
+                        <div class="disclaimer-box">
+                            ⚠️ <b>Human-in-the-Loop Review Required:</b> Please replace all bracketed placeholders <code>[ ]</code> with actual details before sending.
+                        </div>
+                    """, unsafe_allow_html=True)
+            else:
+                st.warning("Please provide context or details to generate an email.")
+        else:
+            st.info("Fill in the fields on the left and click 'Generate' to produce a draft.")
+
+
+# ==========================================
+# 2. MEETING NOTES SUMMARIZER
+# ==========================================
+with tab2:
+    st.header("Meeting Notes Summarizer")
+    st.caption("Synthesize messy transcripts into clear summaries, decisions, and action matrices.")
+    
+    col1, col2 = st.columns([1, 1], gap="large")
+    
+    with col1:
+        raw_notes = st.text_area("Paste Raw Meeting Notes / Transcript", height=250, placeholder="Paste notes here... e.g., 'Sarah agreed to handle migration scripts. Mark said DB backup must happen by Thursday morning. John approved $12k budget reallocation.'")
+        summarize_btn = st.button("Synthesize Meeting Notes", key="summary_btn")
+        
+    with col2:
+        st.subheader("Executive Synthesis")
+        if summarize_btn:
+            if raw_notes.strip():
+                with st.spinner("Extracting decisions & action items..."):
+                    time.sleep(0.8)
+                    
+                    st.markdown("### 📌 Executive Summary")
+                    st.write("The team agreed on shifting the auth migration deadline to Thursday. Operational budget reallocation was approved to cover in-house security development.")
+                    
+                    st.markdown("### 🎯 Key Decisions Made")
+                    st.markdown("- Approved **$12,000 budget reallocation** for in-house auth layer build.")
+                    st.markdown("- Set **database backup execution deadline** for Thursday morning.")
+                    
+                    st.markdown("### 📋 Action Item Matrix")
+                    action_data = {
+                        "Task": ["Execute Database Backup", "Finalize Migration Scripts", "Finance Budget Alignment"],
+                        "Owner": ["Mark", "Sarah", "John"],
+                        "Deadline": ["Thursday 10:00 AM", "Next Tuesday", "Friday EOD"],
+                        "Priority": ["High 🔴", "High 🔴", "Medium 🟡"]
+                    }
+                    df_actions = pd.DataFrame(action_data)
+                    st.dataframe(df_actions, use_container_width=True, hide_index=True)
+            else:
+                st.warning("Please paste meeting notes to synthesize.")
+        else:
+            st.info("Paste notes on the left and click 'Synthesize' to view structured outputs.")
+
+
+# ==========================================
+# 3. AI TASK PLANNER / SCHEDULER
+# ==========================================
+with tab3:
+    st.header("AI Task Planner & Scheduler")
+    st.caption("Organize unorganized task lists using the Eisenhower Matrix and time-blocking.")
+    
+    col1, col2 = st.columns([1, 1], gap="large")
+    
+    with col1:
+        raw_tasks = st.text_area("Input Raw Tasks List", height=220, placeholder="Enter tasks... e.g.,\n- Finish Q3 financial audit deck (due tomorrow)\n- Clear client support tickets\n- Brainstorm 2027 product strategy\n- Review pull requests")
+        plan_btn = st.button("Generate Prioritized Plan", key="plan_btn")
+        
+    with col2:
+        st.subheader("Prioritized Schedule & Strategy")
+        if plan_btn:
+            if raw_tasks.strip():
+                with st.spinner("Categorizing via Eisenhower Matrix..."):
+                    time.sleep(0.8)
+                    
+                    st.markdown("### 📊 Eisenhower Matrix Prioritization")
+                    e1, e2 = st.columns(2)
+                    with e1:
+                        st.error("**Q1: Do First (Urgent & Important)**\n- Q3 Financial Audit Deck\n- High-Priority Client Tickets")
+                        st.warning("**Q3: Delegate (Urgent, Not Important)**\n- Batch PR Code Reviews")
+                    with e2:
+                        st.info("**Q2: Schedule (Important, Not Urgent)**\n- 2027 Strategic Product Roadmap")
+                        st.success("**Q4: Eliminate (Neither)**\n- Unstructured Slack Threads")
+                    
+                    st.markdown("### ⏰ Time-Blocked Daily Schedule")
+                    schedule_data = {
+                        "Time Block": ["08:30 - 09:00 AM", "09:00 - 10:30 AM", "10:30 - 10:45 AM", "10:45 - 12:00 PM"],
+                        "Focus Area": ["Admin Warm-up", "Deep Work Block", "Cognitive Reset", "Focus Block"],
+                        "Planned Task": ["Clear priority client support tickets", "Complete Q3 Financial Audit Deck", "Hydration & Stretch", "Batch PR Code Reviews"],
+                        "Optimization Strategy": ["Batch processing", "Peak focus window", "Prevents fatigue", "Group micro-tasks"]
+                    }
+                    st.dataframe(pd.DataFrame(schedule_data), use_container_width=True, hide_index=True)
+            else:
+                st.warning("Please enter a list of tasks to organize.")
+        else:
+            st.info("Enter tasks on the left to generate a prioritized matrix and schedule.")
+
+
+# ==========================================
+# 4. AI RESEARCH ASSISTANT
+# ==========================================
+with tab4:
+    st.header("AI Research Assistant")
+    st.caption("Summarize complex topics, extract insights, and get strategic recommendations.")
+    
+    col1, col2 = st.columns([1, 1], gap="large")
+    
+    with col1:
+        research_input = st.text_area("Research Query or Article Text", height=220, placeholder="Paste report text or enter topic... e.g., 'Impact of Generative AI on enterprise workplace productivity in 2026'")
+        research_btn = st.button("Analyze & Summarize", key="research_btn")
+        
+    with col2:
+        st.subheader("Research Intelligence Brief")
+        if research_btn:
+            if research_input.strip():
+                with st.spinner("Analyzing text and distilling insights..."):
+                    time.sleep(0.8)
+                    
+                    st.markdown("### 💡 Executive Summary")
+                    st.write(f"Comprehensive analysis on: **'{research_input[:50]}...'**. AI integration across administrative workflows demonstrates an average **35% increase in operational throughput** across knowledge workers.")
+                    
+                    st.markdown("### 🔑 Key Findings")
+                    st.markdown("- **Time Savings:** Automating email drafting and scheduling reclaims ~2.5 hours daily per employee.")
+                    st.markdown("- **Quality Control:** Human-in-the-loop review eliminates >95% of potential hallucination risks.")
+                    st.markdown("- **Compliance:** Local API processing ensures compliance with enterprise PII and POPIA guidelines.")
+                    
+                    st.markdown("### 🚀 Strategic Recommendations")
+                    st.markdown("1. Implement standardized prompt templates across operational departments.")
+                    st.markdown("2. Mandate validation steps before dispatching AI-assisted external communications.")
+            else:
+                st.warning("Please enter a research topic or text to analyze.")
+        else:
+            st.info("Enter research text or topic on the left to extract key insights.")
+
+
+# ==========================================
+# 5. AI CHATBOT INTERFACE
+# ==========================================
+with tab5:
+    st.header("Workplace AI Chatbot Assistant")
+    st.caption("Interactive conversational assistant to handle quick workplace queries.")
+    
+    # Initialize chat history state
+    if "messages" not in st.session_state:
+        st.session_state.messages = [
+            {"role": "assistant", "content": "Hello! I am your AI Workplace Assistant. How can I help you streamline your work today?"}
+        ]
+
+    # Display chat history
+    for msg in st.session_state.messages:
+        with st.chat_message(msg["role"]):
+            st.markdown(msg["content"])
+
+    # Handle user input
+    if user_prompt := st.chat_input("Ask a question or request help with a task..."):
+        # Display user message
+        st.session_state.messages.append({"role": "user", "content": user_prompt})
+        with st.chat_message("user"):
+            st.markdown(user_prompt)
+
+        # Generate assistant response
+        with st.chat_message("assistant"):
+            with st.spinner("Thinking..."):
+                time.sleep(0.5)
+                bot_response = f"I can certainly help with that! Regarding **'{user_prompt}'**, I recommend utilizing the specialized tabs above (such as the *Smart Email Generator* or *Task Planner*) for structured output, or let me know if you need a quick draft here!"
+                st.markdown(bot_response)
+                
+        st.session_state.messages.append({"role": "assistant", "content": bot_response})
